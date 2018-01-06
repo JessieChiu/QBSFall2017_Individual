@@ -1,0 +1,55 @@
+---
+title: "Introduction"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+---
+title: "Counterfactual Plots"
+runtime: shiny
+---
+
+## Research Objective
+
+To illustrate the effect of gender inequality across different aspects (health, education, economy, politics, social institutions) on GNI per capita, providing greater incentive for state support and active participation on all sides.
+
+.
+
+## Problem Definition
+
+GGI/SIGI values and their effects on GNI per capita across countries.
+
++ Y = GNI per capita
++ X1 = Global Gender Gap Index (health, education, economy, politics) [^1]
++ X2 = Social Institutions and Gender Index (social institutions) [^2]
++ MENA = dummy variable for the Middle East and North Africa region (for any nation not in the region, MENA=0) [^3]
+
+[^1]: GNI per capita is a measurement of income divided by the number of people in the country. *Amadeo, K. (n.d.). What Does Gross National Income Say About a Country? Retrieved January 04, 2018, from* <https://www.thebalance.com/gross-national-income-4020738>.
+
+[^2]: Global Gender Gap Index examines four critical areas of inequality between men and women in approximately 130 economies around the globe, focusing on economic participation and opportunity, educational attainment, political empowerment and health and survival statistics. The highest possible score is 1 (equality or better for women) and the lowest possible score is 0. *Global Gender Gap Report. (2018, January 03). Retrieved January 04, 2018, from* <https://en.wikipedia.org/wiki/Global_Gender_Gap_Report>.
+
+[^3]: Social Institutions and Gender Index is designed to measure gender equality in a society. It solely focuses on social institutions that impact the roles of men and women, such as a society's norms, values and attitudes that relate to women.  The score measures on a scale from 0 to 1 the level of gender inequality in social institutions (higher levels indicate greater inequality). *Social Institutions and Gender Index. (2017, September 11). Retrieved January 04, 2018, from* <https://en.wikipedia.org/wiki/Social_Institutions_and_Gender_Index>.
+
+In short, both GGI and SIGI measure on a scale from 0 to 1. Higher levels indicate greater gender equality for GGI, while indicating greater gender inequality for SIGI.
+
+.
+
+## Data Source
+
+This research was conducted around mid-December, 2017. Since the reports for 2017 have not been completed by then, I'll be using data from 2016. 
+
+1. GNI per capita
+
++ The World Bank: <https://data.worldbank.org/indicator/NY.GNP.ATLS.CD?year_high_desc=false>
+
+
+2. GGI
+
++ The Global Gender Gap Report 2016: <http://reports.weforum.org/global-gender-gap-report-2016/>
+
+
+3. SIGI
+
++ Social Institutions and Gender Index: <https://www.genderindex.org/data/>

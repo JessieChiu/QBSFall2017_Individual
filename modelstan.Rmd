@@ -1,0 +1,98 @@
+---
+title: "Model Building - map2stan"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Load Packages
+
+Load all required packages.
+
+```{r library, include=FALSE}
+library(DT)
+library(readr)
+library(rstan)
+library(rethinking)
+library(dplyr)
+```
+
+## Fit Model
+
+### Import Data
+
+Import the df dataset.
+
+```{r import}
+# read files
+df = read.csv(file.path("datasets", "df.csv"))
+# trim data frame
+df = df[ , c("log_GNI","SIGI_s","MENA")]
+```
+
+```{r map, include=FALSE}
+# define model fit by map
+m1.4 <- map(
+  alist(
+    log_GNI ~ dnorm(mu, sigma),
+    mu <- a + bS*SIGI_s + bSM*SIGI_s*MENA + bM*MENA,
+    a ~ dnorm(8,100),
+    bS ~ dnorm(0,1),
+    bM ~ dnorm(0,1),
+    bSM ~ dnorm(0,1),
+    sigma ~ dunif(0,10)
+  ),
+  data <- df)
+```
+
+### Fit Models With map2stan
+
+Fit Model 1.4 using Hamiltonian Monte Carlo (map2stan).
+
+```{r map2stan, eval=FALSE}
+# define model fit by map2stan
+m1.4.stan <- map2stan(
+  alist(
+    log_GNI ~ dnorm(mu, sigma),
+    mu <- a + bS*SIGI_s + bSM*SIGI_s*MENA + bM*MENA,
+    a ~ dnorm(8,100),
+    bS ~ dnorm(0,1),
+    bM ~ dnorm(0,1),
+    bSM ~ dnorm(0,1),
+    sigma ~ dcauchy(0,2)
+  ),
+  data <- df)
+```
+```{r map2stan.2, include=FALSE}
+# define model fit by map2stan
+m1.4.stan <- map2stan(
+  alist(
+    log_GNI ~ dnorm(mu, sigma),
+    mu <- a + bS*SIGI_s + bSM*SIGI_s*MENA + bM*MENA,
+    a ~ dnorm(8,100),
+    bS ~ dnorm(0,1),
+    bM ~ dnorm(0,1),
+    bSM ~ dnorm(0,1),
+    sigma ~ dcauchy(0,2)
+  ),
+  data <- df)
+```
+
+### Parameter Overview
+
+Compare map to map2stan to check the quadratic approximation. From the table of coefficients, we can see that the numbers are approximately the same.
+
+```{r coeftab}
+coeftab(m1.4, m1.4.stan)
+```
+
+For the Stan model and these data, the resulting posterior distribution is quite nearly multivariate Gaussian. 
+
+According to the pairs plot below, the density for sigma is slightly skewed in a certain direction, but otherwise the quadratic approximation does almost as well as Hamiltonian Monte Carlo. Since the quadratic approximation turned out to be okay, we can continue to use map estimates.
+
+Also, since there is nearly no correlation among parameters, we can conclude that each predictor variable provides unique, irreplacable information. Hence, this is a good-fitting model.
+
+```{r stan.pairs}
+pairs(m1.4.stan)
+```

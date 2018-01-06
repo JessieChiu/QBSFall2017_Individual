@@ -1,0 +1,25 @@
+name: final-project
+navbar:
+  title: QBS Fall 2017 - Jessie Chiu
+  left:
+  - text: Introduction
+    href: index.html
+  - text: Data Mining
+    href: data.html
+  - text: Model Building - map
+    href: model.html
+  - text: Model Building - map2stan
+    href: modelstan.html
+  - text: Interaction Visualized
+    href: https://chianjrchiu.shinyapps.io/Interaction/
+
+output:
+  html_document:
+    toc: yes
+    toc_depth: 3
+    toc_float: yes
+    theme: flatly
+    css: style.css
+    lib_dir: site_libs
+    self_contained: no
+output_dir: _site

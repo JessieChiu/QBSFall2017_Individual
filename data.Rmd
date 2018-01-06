@@ -1,0 +1,125 @@
+---
+title: "Data Mining"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Load Packages
+
+Load all required packages.
+
+```{r library, include=FALSE}
+require("xml2")
+library('rvest')
+library('NLP')
+library('tm')
+library('stringr')
+library('dplyr')
+library("DT")
+library("plyr")
+```
+
+## Import Data
+
+Import the datasets of country information, GNI per capita (2016), GGI (2016), and SIGI (2014).
+
+```{r import}
+# read files
+country = read.csv(file.path("datasets", "country.csv"), na.strings=c("", "NA"), sep=",")
+gni = read.csv(file.path("datasets", "gni.csv"), na.strings=c("", "NA"), sep=",")
+ggi = read.csv(file.path("datasets", "ggi.csv"), na.strings=c("", "NA"), sep=",")
+sigi = read.csv(file.path("datasets", "sigi.csv"), na.strings=c("", "NA"), sep=",")
+```
+
+## Preprocess Data
+
+Step 1 : Combine datasets *country* and *gni* as *country_gni*.
+
+Step 2 : Extract the overall GGI and SIGI values of each country and combine with *country_gni* as dataset *dta*.
+
+Step 3 : Exclude NA values.
+
+```{r pre}
+# process country data
+country_gni = merge(country, gni)
+country_gni = country_gni[complete.cases(country_gni), ]
+
+# process ggi data
+ggi_TOT = subset(ggi, select = c(Country_Name, overall_score))
+colnames(ggi_TOT)[2] = "GGI"
+
+# process sigi data
+sigi_TOT = sigi[grep("TOT", sigi$Subject), ]
+colnames(sigi_TOT)[3] = "SIGI"
+sigi_TOT = subset(sigi_TOT, select = -Subject)
+
+# merge datasets
+dta = join_all(list(country_gni, ggi_TOT, sigi_TOT), type = "left")
+dta = dta[complete.cases(dta), ]
+
+DT:::datatable(
+    dta,
+    extensions = list("Scroller" = NULL,
+                      'FixedHeader' = NULL,
+                      "FixedColumns" = list(leftColumns=3)),
+    options = list(
+                deferRender = TRUE,
+                scrollY = 200,
+                scroller = TRUE,
+                autoWidth=TRUE,
+                pageLength = 50,
+                fixedHeader = TRUE,
+                dom = 't',
+                scrollX = TRUE,
+                fixedColumns = list(leftColumns = 3)
+                  )
+              )
+```
+
+.
+
+Step 4 : Assign attribute **Region** to dummy variable **MENA**, the value being 1 if the country is in the Middle East & North Africa region, 0 if otherwise.
+
+```{r dummy}
+# add dummy variables
+dta$MENA = ifelse(dta$Region == "Middle East & North Africa", 1, 0)
+```
+
+Step 5 : Compute log value of GNI per capita, standardize GGI and SIGI, add dummies, and assign to new dataframe *df*. 
+
+```{r df}
+# create df
+df = dta %>%
+  summarise(Country_Code = Country_Code, log_GNI=log(GNI_per_capita), GGI_s=(GGI - mean(GGI))/sd(GGI), SIGI_s = (SIGI - mean(SIGI))/sd(SIGI), MENA = MENA)
+
+DT:::datatable(
+    df,
+    extensions = list("Scroller" = NULL,
+                      'FixedHeader' = NULL,
+                      "FixedColumns" = list(leftColumns=2)),
+    options = list(
+                deferRender = TRUE,
+                scrollY = 200,
+                scroller = TRUE,
+                autoWidth=TRUE,
+                pageLength = 50,
+                fixedHeader = TRUE,
+                dom = 't',
+                scrollX = TRUE,
+                fixedColumns = list(leftColumns = 2)
+                  )
+              )
+```
+
+.
+
+## Export Dataset
+
+Export dataset *df* and save as df.csv.
+
+```{r export, eval=FALSE}
+# export df
+write.csv(df, "df.csv")
+```

@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Data Mining</title>
+
+<script src="site_libs/jquery-1.12.4/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<script src="site_libs/htmlwidgets-0.9/htmlwidgets.js"></script>
+<script src="site_libs/datatables-binding-0.2/datatables.js"></script>
+<link href="site_libs/dt-core-1.10.12/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="site_libs/dt-core-1.10.12/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="site_libs/dt-core-1.10.12/js/jquery.dataTables.min.js"></script>
+<link href="site_libs/dt-ext-scroller-1.10.12/css/scroller.dataTables.min.css" rel="stylesheet" />
+<script src="site_libs/dt-ext-scroller-1.10.12/js/dataTables.scroller.min.js"></script>
+<link href="site_libs/dt-ext-fixedheader-1.10.12/css/fixedHeader.dataTables.min.css" rel="stylesheet" />
+<script src="site_libs/dt-ext-fixedheader-1.10.12/js/dataTables.fixedHeader.min.js"></script>
+<link href="site_libs/dt-ext-fixedcolumns-1.10.12/css/fixedColumns.dataTables.min.css" rel="stylesheet" />
+<script src="site_libs/dt-ext-fixedcolumns-1.10.12/js/dataTables.fixedColumns.min.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 60px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+
+.section h2 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h3 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h4 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h5 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h6 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">QBS Fall 2017 - Jessie Chiu</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Introduction</a>
+</li>
+<li>
+  <a href="data.html">Data Mining</a>
+</li>
+<li>
+  <a href="model.html">Model Building - map</a>
+</li>
+<li>
+  <a href="modelstan.html">Model Building - map2stan</a>
+</li>
+<li>
+  <a href="https://chianjrchiu.shinyapps.io/Interaction/">Interaction Visualized</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Data Mining</h1>
+
+</div>
+
+
+<div id="load-packages" class="section level2">
+<h2>Load Packages</h2>
+<p>Load all required packages.</p>
+</div>
+<div id="import-data" class="section level2">
+<h2>Import Data</h2>
+<p>Import the datasets of country information, GNI per capita (2016), GGI (2016), and SIGI (2014).</p>
+<pre class="r"><code># read files
+country = read.csv(file.path(&quot;datasets&quot;, &quot;country.csv&quot;), na.strings=c(&quot;&quot;, &quot;NA&quot;), sep=&quot;,&quot;)
+gni = read.csv(file.path(&quot;datasets&quot;, &quot;gni.csv&quot;), na.strings=c(&quot;&quot;, &quot;NA&quot;), sep=&quot;,&quot;)
+ggi = read.csv(file.path(&quot;datasets&quot;, &quot;ggi.csv&quot;), na.strings=c(&quot;&quot;, &quot;NA&quot;), sep=&quot;,&quot;)
+sigi = read.csv(file.path(&quot;datasets&quot;, &quot;sigi.csv&quot;), na.strings=c(&quot;&quot;, &quot;NA&quot;), sep=&quot;,&quot;)</code></pre>
+</div>
+<div id="preprocess-data" class="section level2">
+<h2>Preprocess Data</h2>
+<p>Step 1 : Combine datasets <em>country</em> and <em>gni</em> as <em>country_gni</em>.</p>
+<p>Step 2 : Extract the overall GGI and SIGI values of each country and combine with <em>country_gni</em> as dataset <em>dta</em>.</p>
+<p>Step 3 : Exclude NA values.</p>
+<pre class="r"><code># process country data
+country_gni = merge(country, gni)
+country_gni = country_gni[complete.cases(country_gni), ]
+
+# process ggi data
+ggi_TOT = subset(ggi, select = c(Country_Name, overall_score))
+colnames(ggi_TOT)[2] = &quot;GGI&quot;
+
+# process sigi data
+sigi_TOT = sigi[grep(&quot;TOT&quot;, sigi$Subject), ]
+colnames(sigi_TOT)[3] = &quot;SIGI&quot;
+sigi_TOT = subset(sigi_TOT, select = -Subject)
+
+# merge datasets
+dta = join_all(list(country_gni, ggi_TOT, sigi_TOT), type = &quot;left&quot;)</code></pre>
+<pre><code>## Joining by: Country_Name</code></pre>
+<pre><code>## Joining by: Country_Code</code></pre>
+<pre class="r"><code>dta = dta[complete.cases(dta), ]
+
+DT:::datatable(
+    dta,
+    extensions = list(&quot;Scroller&quot; = NULL,
+                      &#39;FixedHeader&#39; = NULL,
+                      &quot;FixedColumns&quot; = list(leftColumns=3)),
+    options = list(
+                deferRender = TRUE,
+                scrollY = 200,
+                scroller = TRUE,
+                autoWidth=TRUE,
+                pageLength = 50,
+                fixedHeader = TRUE,
+                dom = &#39;t&#39;,
+                scrollX = TRUE,
+                fixedColumns = list(leftColumns = 3)
+                  )
+              )</code></pre>
+<div id="htmlwidget-8520c55fc37997998a84" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-8520c55fc37997998a84">{"x":{"filter":"none","extensions":["Scroller","FixedHeader","FixedColumns"],"data":[["2","4","6","7","10","12","14","15","17","18","19","20","22","24","25","26","28","29","32","34","35","39","42","45","46","48","51","54","56","57","59","62","64","67","71","72","77","78","80","81","82","87","88","89","90","91","92","93","95","96","97","100","103","107","108","110","111","113","115","118","120","122","124","126","127","128","131","133","136","137","142","144","145","146","152","155","156","157","158","161","162","163","166","167","173","177"],["Albania","Angola","Argentina","Armenia","Azerbaijan","Bangladesh","Belarus","Belgium","Benin","Bhutan","Bolivia","Bosnia and Herzegovina","Brazil","Bulgaria","Burkina Faso","Burundi","Cambodia","Cameroon","Chad","China","Colombia","Costa Rica","Czech Republic","Dominican Republic","Ecuador","El Salvador","Ethiopia","France","Gambia, The","Georgia","Ghana","Guatemala","Guinea","Honduras","India","Indonesia","Italy","Jamaica","Jordan","Kazakhstan","Kenya","Kyrgyz Republic","Lao PDR","Latvia","Lebanon","Lesotho","Liberia","Lithuania","Macedonia, FYR","Madagascar","Malawi","Mali","Mauritania","Moldova","Mongolia","Morocco","Mozambique","Namibia","Nepal","Nicaragua","Nigeria","Pakistan","Panama","Paraguay","Peru","Philippines","Romania","Rwanda","Senegal","Serbia","Slovenia","South Africa","Spain","Sri Lanka","Swaziland","Tajikistan","Tanzania","Thailand","Timor-Leste","Trinidad and Tobago","Tunisia","Turkey","Uganda","Ukraine","Vietnam","Zimbabwe"],["ALB","AGO","ARG","ARM","AZE","BGD","BLR","BEL","BEN","BTN","BOL","BIH","BRA","BGR","BFA","BDI","KHM","CMR","TCD","CHN","COL","CRI","CZE","DOM","ECU","SLV","ETH","FRA","GMB","GEO","GHA","GTM","GIN","HND","IND","IDN","ITA","JAM","JOR","KAZ","KEN","KGZ","LAO","LVA","LBN","LSO","LBR","LTU","MKD","MDG","MWI","MLI","MRT","MDA","MNG","MAR","MOZ","NAM","NPL","NIC","NGA","PAK","PAN","PRY","PER","PHL","ROU","RWA","SEN","SRB","SVN","ZAF","ESP","LKA","SWZ","TJK","TZA","THA","TLS","TTO","TUN","TUR","UGA","UKR","VNM","ZWE"],["Europe &amp; Central Asia","Sub-Saharan Africa","Latin America &amp; Caribbean","Europe &amp; Central Asia","Europe &amp; Central Asia","South Asia","Europe &amp; Central Asia","Europe &amp; Central Asia","Sub-Saharan Africa","South Asia","Latin America &amp; Caribbean","Europe &amp; Central Asia","Latin America &amp; Caribbean","Europe &amp; Central Asia","Sub-Saharan Africa","Sub-Saharan Africa","East Asia &amp; Pacific","Sub-Saharan Africa","Sub-Saharan Africa","East Asia &amp; Pacific","Latin America &amp; Caribbean","Latin America &amp; Caribbean","Europe &amp; Central Asia","Latin America &amp; Caribbean","Latin America &amp; Caribbean","Latin America &amp; Caribbean","Sub-Saharan Africa","Europe &amp; Central Asia","Sub-Saharan Africa","Europe &amp; Central Asia","Sub-Saharan Africa","Latin America &amp; Caribbean","Sub-Saharan Africa","Latin America &amp; Caribbean","South Asia","East Asia &amp; Pacific","Europe &amp; Central Asia","Latin America &amp; Caribbean","Middle East &amp; North Africa","Europe &amp; Central Asia","Sub-Saharan Africa","Europe &amp; Central Asia","East Asia &amp; Pacific","Europe &amp; Central Asia","Middle East &amp; North Africa","Sub-Saharan Africa","Sub-Saharan Africa","Europe &amp; Central Asia","Europe &amp; Central Asia","Sub-Saharan Africa","Sub-Saharan Africa","Sub-Saharan Africa","Sub-Saharan Africa","Europe &amp; Central Asia","East Asia &amp; Pacific","Middle East &amp; North Africa","Sub-Saharan Africa","Sub-Saharan Africa","South Asia","Latin America &amp; Caribbean","Sub-Saharan Africa","South Asia","Latin America &amp; Caribbean","Latin America &amp; Caribbean","Latin America &amp; Caribbean","East Asia &amp; Pacific","Europe &amp; Central Asia","Sub-Saharan Africa","Sub-Saharan Africa","Europe &amp; Central Asia","Europe &amp; Central Asia","Sub-Saharan Africa","Europe &amp; Central Asia","South Asia","Sub-Saharan Africa","Europe &amp; Central Asia","Sub-Saharan Africa","East Asia &amp; Pacific","East Asia &amp; Pacific","Latin America &amp; Caribbean","Middle East &amp; North Africa","Europe &amp; Central Asia","Sub-Saharan Africa","Europe &amp; Central Asia","East Asia &amp; Pacific","Sub-Saharan Africa"],["Upper middle income","Lower middle income","Upper middle income","Lower middle income","Upper middle income","Lower middle income","Upper middle income","High income","Low income","Lower middle income","Lower middle income","Upper middle income","Upper middle income","Upper middle income","Low income","Low income","Lower middle income","Lower middle income","Low income","Upper middle income","Upper middle income","Upper middle income","High income","Upper middle income","Upper middle income","Lower middle income","Low income","High income","Low income","Lower middle income","Lower middle income","Lower middle income","Low income","Lower middle income","Lower middle income","Lower middle income","High income","Upper middle income","Lower middle income","Upper middle income","Lower middle income","Lower middle income","Lower middle income","High income","Upper middle income","Lower middle income","Low income","High income","Upper middle income","Low income","Low income","Low income","Lower middle income","Lower middle income","Lower middle income","Lower middle income","Low income","Upper middle income","Low income","Lower middle income","Lower middle income","Lower middle income","Upper middle income","Upper middle income","Upper middle income","Lower middle income","Upper middle income","Low income","Low income","Upper middle income","High income","Upper middle income","High income","Lower middle income","Lower middle income","Lower middle income","Low income","Upper middle income","Lower middle income","High income","Lower middle income","Upper middle income","Low income","Lower middle income","Lower middle income","Low income"],[4180,3450,11970,3770,4760,1330,5590,41820,820,2510,3070,4940,8840,7580,620,280,1140,1400,720,8250,6310,10840,17540,6390,5800,3920,660,38720,430,3830,1380,3790,670,2150,1670,3400,31730,4630,3920,8810,1380,1100,2150,14570,7980,1270,370,14750,4980,400,320,770,1130,2120,3590,2850,480,4640,730,2100,2450,1500,12140,4060,5950,3580,9480,700,950,5310,21620,5490,27600,3780,2960,1110,900,5640,2060,16240,3690,11230,630,2310,2100,890],[0.704,0.643,0.735,0.669,0.684,0.698,0.737,0.745,0.636,0.642,0.746,0.685,0.687,0.726,0.64,0.768,0.658,0.684,0.587,0.676,0.727,0.736,0.69,0.676,0.726,0.702,0.662,0.755,0.667,0.681,0.705,0.666,0.64,0.69,0.683,0.682,0.719,0.724,0.603,0.718,0.702,0.687,0.724,0.755,0.598,0.706,0.652,0.744,0.696,0.704,0.7,0.591,0.624,0.741,0.705,0.597,0.75,0.765,0.661,0.78,0.643,0.556,0.721,0.676,0.687,0.786,0.69,0.8,0.685,0.72,0.786,0.764,0.738,0.673,0.665,0.679,0.716,0.699,0.637,0.723,0.636,0.623,0.704,0.7,0.7,0.71],[0.2476,0.1719,0.0107,0.236,0.2403,0.39,0.0336,0.0016,0.278,0.1142,0.0579,0.0333,0.0458,0.0449,0.2819,0.1662,0.0477,0.2803,0.4665,0.131,0.0862,0.0506,0.0283,0.0367,0.0422,0.049,0.245,0.0034,0.524,0.2035,0.2988,0.1318,0.3206,0.1074,0.265,0.1532,0.0116,0.135,0.3119,0.1196,0.2157,0.1598,0.1445,0.0511,0.2897,0.0876,0.3828,0.0424,0.1345,0.1002,0.2073,0.5164,0.3954,0.0513,0.0345,0.1052,0.1375,0.1173,0.3229,0.1595,0.3911,0.3013,0.0375,0.058,0.0826,0.1765,0.0686,0.1339,0.1985,0.0097,0.0037,0.0599,0.0049,0.1894,0.2119,0.1393,0.2504,0.1056,0.255,0.0236,0.1986,0.1032,0.2163,0.075,0.1865,0.1392]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Country_Name<\/th>\n      <th>Country_Code<\/th>\n      <th>Region<\/th>\n      <th>Income_Group<\/th>\n      <th>GNI_per_capita<\/th>\n      <th>GGI<\/th>\n      <th>SIGI<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"deferRender":true,"scrollY":200,"scroller":true,"autoWidth":true,"pageLength":50,"fixedHeader":true,"dom":"t","scrollX":true,"fixedColumns":{"leftColumns":3},"columnDefs":[{"className":"dt-right","targets":[5,6,7]},{"orderable":false,"targets":0}],"order":[],"orderClasses":false},"selection":{"mode":"multiple","selected":null,"target":"row"}},"evals":[],"jsHooks":[]}</script>
+<p>.</p>
+<p>Step 4 : Assign attribute <strong>Region</strong> to dummy variable <strong>MENA</strong>, the value being 1 if the country is in the Middle East &amp; North Africa region, 0 if otherwise.</p>
+<pre class="r"><code># add dummy variables
+dta$MENA = ifelse(dta$Region == &quot;Middle East &amp; North Africa&quot;, 1, 0)</code></pre>
+<p>Step 5 : Compute log value of GNI per capita, standardize GGI and SIGI, add dummies, and assign to new dataframe <em>df</em>.</p>
+<pre class="r"><code># create df
+df = dta %&gt;%
+  summarise(Country_Code = Country_Code, log_GNI=log(GNI_per_capita), GGI_s=(GGI - mean(GGI))/sd(GGI), SIGI_s = (SIGI - mean(SIGI))/sd(SIGI), MENA = MENA)
+
+DT:::datatable(
+    df,
+    extensions = list(&quot;Scroller&quot; = NULL,
+                      &#39;FixedHeader&#39; = NULL,
+                      &quot;FixedColumns&quot; = list(leftColumns=2)),
+    options = list(
+                deferRender = TRUE,
+                scrollY = 200,
+                scroller = TRUE,
+                autoWidth=TRUE,
+                pageLength = 50,
+                fixedHeader = TRUE,
+                dom = &#39;t&#39;,
+                scrollX = TRUE,
+                fixedColumns = list(leftColumns = 2)
+                  )
+              )</code></pre>
+<div id="htmlwidget-6618379d0ea741d64620" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-6618379d0ea741d64620">{"x":{"filter":"none","extensions":["Scroller","FixedHeader","FixedColumns"],"data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59","60","61","62","63","64","65","66","67","68","69","70","71","72","73","74","75","76","77","78","79","80","81","82","83","84","85","86"],["ALB","AGO","ARG","ARM","AZE","BGD","BLR","BEL","BEN","BTN","BOL","BIH","BRA","BGR","BFA","BDI","KHM","CMR","TCD","CHN","COL","CRI","CZE","DOM","ECU","SLV","ETH","FRA","GMB","GEO","GHA","GTM","GIN","HND","IND","IDN","ITA","JAM","JOR","KAZ","KEN","KGZ","LAO","LVA","LBN","LSO","LBR","LTU","MKD","MDG","MWI","MLI","MRT","MDA","MNG","MAR","MOZ","NAM","NPL","NIC","NGA","PAK","PAN","PRY","PER","PHL","ROU","RWA","SEN","SRB","SVN","ZAF","ESP","LKA","SWZ","TJK","TZA","THA","TLS","TTO","TUN","TUR","UGA","UKR","VNM","ZWE"],[8.3380665255188,8.14612951002541,9.39015879855202,8.23483028044206,8.46800294722547,7.1929342212158,8.62873456614915,10.6411299729826,6.7093043402583,7.82803803212583,8.02943284058124,8.50512061018197,9.08704215563169,8.93326847863642,6.42971947803914,5.63478960316925,7.03878354138854,7.24422751560335,6.5792512120101,9.01796847932873,8.74989095553526,9.29099827499364,9.77223926592617,8.76248954737158,8.66561319653451,8.27384693278451,6.49223983502047,10.5641115413905,6.06378520868761,8.25062008217469,7.22983877815125,8.24012129807647,6.50727771238501,7.67322312112171,7.4205789054108,8.13153071060425,10.3650178845772,8.44031214708028,8.27384693278451,9.08364271893022,7.22983877815125,7.00306545878646,7.67322312112171,9.58671989918925,8.98469369044386,7.14677217945264,5.91350300563827,9.59899836176797,8.5131851700187,5.99146454710798,5.76832099579377,6.64639051484773,7.02997291170639,7.65917136766606,8.18590748148232,7.9550742732627,6.17378610390194,8.4424696452203,6.59304453414244,7.64969262371151,7.80384330353877,7.3132203870903,9.40426106461349,8.30893825259578,8.69114649853968,8.18311807939475,9.15693959524907,6.5510803350434,6.85646198459459,8.57734711423598,9.9813740911932,8.61068353450358,10.2255710517052,8.23747928861363,7.99294454731811,7.01211529430638,6.80239476332431,8.6376393444921,7.63046126178363,9.69523261371567,8.21338173703457,9.32634404773249,6.44571981938558,7.74500280351584,7.64969262371151,6.79122146272619],[0.225345805063329,-1.02827465449365,0.86243161237917,-0.493944622551328,-0.18567729643076,0.102038874615101,0.903533922528579,1.06794316312622,-1.17213274001658,-1.04882580956835,1.08849431820092,-0.165126141356055,-0.124023831206646,0.677471216706829,-1.08992811971776,1.54061972984442,-0.720007328373078,-0.18567729643076,-2.1791393386771,-0.350086537028396,0.698022371781533,0.882982767453874,-0.062370365982535,-0.350086537028396,0.677471216706829,0.18424349491392,-0.63780270807426,1.27345471387326,-0.535046932700737,-0.247330761654874,0.245896960138033,-0.555598087775442,-1.08992811971776,-0.062370365982535,-0.206228451505465,-0.226779606580169,0.533613131183897,0.63636890655742,-1.85032085748183,0.513061976109192,0.18424349491392,-0.124023831206646,0.63636890655742,1.27345471387326,-1.95307663285535,0.266448115212738,-0.843314258821306,1.04739200805151,0.0609365644656923,0.225345805063329,0.143141184764511,-2.09693471837828,-1.41874660091303,0.985738542827397,0.245896960138033,-1.97362778793006,1.17069893849974,1.47896626462031,-0.658353863148965,1.78723359074087,-1.02827465449365,-2.81622514599294,0.574715441333306,-0.350086537028396,-0.124023831206646,1.9105405211891,-0.062370365982535,2.19825669223497,-0.165126141356055,0.554164286258602,1.9105405211891,1.4584151095456,0.924085077603284,-0.41174000225251,-0.576149242850146,-0.288433071804283,0.471959665959783,0.122590029689806,-1.15158158494187,0.615817751482715,-1.17213274001658,-1.43929775598774,0.225345805063329,0.143141184764511,0.143141184764511,0.348652735511556],[0.717105146544014,0.104006897781001,-1.20156031094552,0.62315614144955,0.657982065751808,1.8704101746002,-1.01609201640559,-1.2752616856317,0.963316332308818,-0.363308412042326,-0.819285048837011,-1.01852173205458,-0.917283580013133,-0.924572726960118,0.994902635745749,0.0578423004501003,-0.901895380902833,0.981944152284444,2.48998766509386,-0.227244335698619,-0.590081872615171,-0.878408129629217,-1.05901699287116,-0.990984954699308,-0.946440167801071,-0.891366613090523,0.696047610919393,-1.26068339173773,2.95568316448453,0.359936946141783,1.13177661730579,-0.220765093967966,1.30833595446607,-0.418381966752874,0.858028654185711,-0.0474453776730062,-1.19427116399854,-0.194848127045355,1.23787420064523,-0.31957353036042,0.458745382534237,0.00600836660487862,-0.117907131493855,-0.874358603547559,1.05807524261961,-0.578743199586529,1.81209699902432,-0.944820357368408,-0.198897653127013,-0.476695142328749,0.390713344362384,2.89413036804333,1.9141450562821,-0.872738793114896,-1.0088028694586,-0.436199881512169,-0.174600496637066,-0.338201350336047,1.3269637744417,0.0035786509558839,1.87931913197985,1.15202424771408,-0.984505712968655,-0.81847514362068,-0.619238460403108,0.141262537732254,-0.732625190689531,-0.203757084425003,0.319441685325204,-1.20965936310884,-1.25825367608873,-0.803086944510379,-1.24853481349275,0.245740310639029,0.427968984313637,-0.160022202743097,0.739782492601299,-0.432960260646843,0.777038132552552,-1.09708253803875,0.320251590541535,-0.452397985838801,0.463604813832227,-0.680791256844309,0.222253059365413,-0.160832107959429],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Country_Code<\/th>\n      <th>log_GNI<\/th>\n      <th>GGI_s<\/th>\n      <th>SIGI_s<\/th>\n      <th>MENA<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"deferRender":true,"scrollY":200,"scroller":true,"autoWidth":true,"pageLength":50,"fixedHeader":true,"dom":"t","scrollX":true,"fixedColumns":{"leftColumns":2},"columnDefs":[{"className":"dt-right","targets":[2,3,4,5]},{"orderable":false,"targets":0}],"order":[],"orderClasses":false},"selection":{"mode":"multiple","selected":null,"target":"row"}},"evals":[],"jsHooks":[]}</script>
+<p>.</p>
+</div>
+<div id="export-dataset" class="section level2">
+<h2>Export Dataset</h2>
+<p>Export dataset <em>df</em> and save as df.csv.</p>
+<pre class="r"><code># export df
+write.csv(df, &quot;df.csv&quot;)</code></pre>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
